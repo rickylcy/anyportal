@@ -13,11 +13,9 @@ function App() {
   return (
     <>
       <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />}></Route>
-        </Routes>
-      </Router>
+      <Routes>
+        <Route path="/" element={<Home />}></Route>
+      </Routes>
       <MenuDrawer drawerOpen={drawerOpen} toggleDrawer={toggleDrawer} />
       <NavBar toggleDrawer={toggleDrawer} />
     </>

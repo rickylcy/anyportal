@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "../App.css";
 import Box from "@mui/material/Box";
 import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import Button from "@mui/material/Button";
@@ -24,8 +25,8 @@ function MenuDrawer({ drawerOpen, toggleDrawer }) {
         {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => {
           var link = `/` + text;
           return (
-            <Link to={link} key={index}>
-              <ListItem key={text} disablePadding>
+            <Link to={link} key={index} className="link">
+              <ListItem disablePadding>
                 <ListItemButton>
                   <ListItemIcon>
                     {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
