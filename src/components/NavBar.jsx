@@ -9,20 +9,27 @@ import SearchIcon from "@mui/icons-material/Search";
 
 function NavBar({ toggleDrawer }) {
   return (
-    <AppBar position="fixed" color="primary" sx={{ top: "auto", bottom: 0 }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        bgcolor: "darkgray.main",
+        top: "auto",
+        bottom: 0,
+      }}
+    >
       <Toolbar>
         <IconButton
-          color="inherit"
+          color="white"
           aria-label="open drawer"
           onClick={toggleDrawer(true)}
         >
           <MenuIcon />
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
-        <IconButton color="inherit">
+        <IconButton color="white">
           <SearchIcon />
         </IconButton>
-        <IconButton color="inherit">
+        <IconButton color="white">
           <MoreIcon />
         </IconButton>
       </Toolbar>
