@@ -19,17 +19,17 @@ function NavBar({ toggleDrawer }) {
     >
       <Toolbar>
         <IconButton
-          color="white"
+          color="secondary"
           aria-label="open drawer"
           onClick={toggleDrawer(true)}
         >
           <MenuIcon />
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
-        <IconButton color="white">
+        <IconButton color="secondary">
           <SearchIcon />
         </IconButton>
-        <IconButton color="white">
+        <IconButton color="secondary">
           <MoreIcon />
         </IconButton>
       </Toolbar>

@@ -12,18 +12,15 @@ import ListItemText from "@mui/material/ListItemText";
 
 //ICON
 import ListItemIcon from "@mui/material/ListItemIcon";
-import SearchIcon from "@mui/icons-material/Search";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
-import ClearIcon from "@mui/icons-material/Clear";
 
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import UtilityBar from "./UtilityBar";
 import Paper from "@mui/material/Paper";
 import Channels from "./Channels";
-import TextField from "@mui/material/TextField";
-import AccountCircle from "@mui/icons-material/AccountCircle";
+import Search from "./Search";
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
@@ -34,43 +31,14 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 function MenuDrawer({ drawerOpen, toggleDrawer }) {
-  const [input, setInput] = useState("");
-  const handleClear = () => {
-    console.log("88");
-    setInput("");
-  };
-  const handleSearch = (event) => {
-    console.log("set");
-    setInput(event.target.value);
-  };
   const list = () => (
-    <Box sx={{ width: 250, flexGrow: 1 }} role="presentation">
-      <Grid container spacing={2} columns={16} sx={{ pt: 2 }}>
-        <UtilityBar />
-
-        <Grid item xs={10}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "flex-end",
-              mx: 0.5,
-              px: 0.5,
-              pb: 1,
-              border: 1,
-              borderRadius: 2,
-            }}
-          >
-            <SearchIcon
-              sx={{ fontSize: 25, color: "action.active", mr: 1, my: 0.5 }}
-            />
-            <TextField
-              id="input-with-sx"
-              variant="standard"
-              onChange={handleSearch}
-              value={input}
-            />
-            <ClearIcon onClick={handleClear} sx={{ fontSize: 20 }} />
-          </Box>
+    <Box sx={{ width: 280, flexGrow: 1 }} role="presentation">
+      <Grid container spacing={2} columns={13} sx={{ height: "100vh" }}>
+        <Grid item xs={2.5} sx={{ bgcolor: "primary.main" }}>
+          <UtilityBar />
+        </Grid>
+        <Grid item xs={10} sx={{ opacity: 2, bgcolor: "secondary.main" }}>
+          <Search />
           <Grid onClick={toggleDrawer(false)}>
             <List>
               {["歷史", "Starred", "Email", "Drafts"].map((text, index) => {

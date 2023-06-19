@@ -4,9 +4,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import Grid from "@mui/material/Grid";
+import { Grid } from "@mui/material";
 
 function TopNavBar() {
   return (
@@ -17,32 +15,35 @@ function TopNavBar() {
           bgcolor: "darkgray.main",
           top: 0,
           bottom: "auto",
+          height: "5vh",
         }}
       >
-        <Toolbar>
-          <Button
-            color="white"
-            style={{
-              width: "50vw",
-            }}
+        <Grid container>
+          <Grid
+            item
+            xs={6}
             onClick={() => {
               console.log("111");
             }}
+            align="center"
           >
-            HA
-          </Button>
-          <Button
-            color="white"
-            style={{
-              width: "50vw",
-            }}
+            <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
+              TEST1
+            </Typography>
+          </Grid>
+          <Grid
+            item
+            xs={6}
             onClick={() => {
               console.log("222");
             }}
+            align="center"
           >
-            BA
-          </Button>
-        </Toolbar>
+            <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
+              TEST2
+            </Typography>
+          </Grid>
+        </Grid>
       </AppBar>
     </Box>
   );

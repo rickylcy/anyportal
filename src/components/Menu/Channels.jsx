@@ -2,11 +2,12 @@ import React from "react";
 import "../../App.css";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 function Channels() {
   return (
     <Grid container columnSpacing={{ xs: 4, sm: 8, md: 12 }} sx={{ p: 1 }}>
-      {["吹水台", "自選台", "創意台", "", "", "", "", "", "", ""].map(
+      {["CHANNEL1", "CHANNEL2", "CHANNEL3", "", "", "", "", "", "", ""].map(
         (text, index) => {
           var clink = `/category/` + index;
           return (
@@ -20,7 +21,9 @@ function Channels() {
               }}
             >
               <Link to={clink} key={index} className="link">
-                {text}
+                <Typography variant="subtitle1" color="darkgray.main">
+                  {text}
+                </Typography>
               </Link>
             </Grid>
           );
