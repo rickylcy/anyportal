@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 
-function UtilityBar() {
+function UtilityBar({ toggleDrawer }) {
   return (
     <Box
       position="fixed"
@@ -23,9 +23,7 @@ function UtilityBar() {
           href="/notifications"
           sx={{ fontSize: 33, my: 1 }}
           style={{ color: "#999999" }}
-          onClick={() => {
-            console.log("NotificationsIcon");
-          }}
+          onClick={toggleDrawer("right", true)}
         />
         <AccountCircleIcon
           href="/account"

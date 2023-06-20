@@ -21,7 +21,7 @@ function NavBar({ toggleDrawer }) {
         <IconButton
           color="secondary"
           aria-label="open drawer"
-          onClick={toggleDrawer(true)}
+          onClick={toggleDrawer("left", true)}
         >
           <MenuIcon />
         </IconButton>

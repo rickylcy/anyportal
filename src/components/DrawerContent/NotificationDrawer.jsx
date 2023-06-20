@@ -1,14 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
-function TopNavBar() {
+function NotificationDrawer({ toggleDrawer }) {
   return (
-    <Box sx={{ flexGrow: 1 }}>
+    <Box sx={{ width: "100vw", flexGrow: 1 }} role="presentation">
       <AppBar
-        position="fixed"
+        position="sticky"
         sx={{
           bgcolor: "darkgray.main",
           top: 0,
@@ -19,32 +20,22 @@ function TopNavBar() {
         <Grid container>
           <Grid
             item
-            xs={6}
-            onClick={() => {
-              console.log("111");
-            }}
+            xs={1}
             align="center"
+            onClick={toggleDrawer("right", false)}
           >
-            <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
-              TEST1
-            </Typography>
+            <CloseIcon color="white" sx={{ fontSize: 30, m: 0.5 }} />
           </Grid>
-          <Grid
-            item
-            xs={6}
-            onClick={() => {
-              console.log("222");
-            }}
-            align="center"
-          >
+          <Grid item xs={10} align="center">
             <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
-              TEST2
+              Notifications
             </Typography>
           </Grid>
         </Grid>
       </AppBar>
+      NOTIFICATION
     </Box>
   );
 }
 
-export default TopNavBar;
+export default NotificationDrawer;
