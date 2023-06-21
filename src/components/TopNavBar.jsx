@@ -4,11 +4,11 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 
-function TopNavBar() {
+function TopNavBar({ topOptions }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
-        position="fixed"
+        position="sticky"
         sx={{
           bgcolor: "darkgray.main",
           top: 0,
@@ -17,30 +17,23 @@ function TopNavBar() {
         }}
       >
         <Grid container>
-          <Grid
-            item
-            xs={6}
-            onClick={() => {
-              console.log("111");
-            }}
-            align="center"
-          >
-            <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
-              TEST1
-            </Typography>
-          </Grid>
-          <Grid
-            item
-            xs={6}
-            onClick={() => {
-              console.log("222");
-            }}
-            align="center"
-          >
-            <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
-              TEST2
-            </Typography>
-          </Grid>
+          {topOptions.map((option, index) => {
+            return (
+              <Grid
+                item
+                key={index}
+                xs={6}
+                onClick={() => {
+                  console.log(index);
+                }}
+                align="center"
+              >
+                <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
+                  {option}
+                </Typography>
+              </Grid>
+            );
+          })}
         </Grid>
       </AppBar>
     </Box>

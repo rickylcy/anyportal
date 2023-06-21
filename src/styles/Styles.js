@@ -40,8 +40,16 @@ const theme = createTheme({
     darkgray: {
       main: Colors.darkgray,
     },
+    lightgray: {
+      main: Colors.dove_gray,
+    },
   },
   components: {
+    MuiTypography: {
+      defaultProps: {
+        fontFamily: "Roboto",
+      },
+    },
     MuiButton: {
       defaultProps: {
         disableRipple: true,

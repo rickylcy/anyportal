@@ -11,6 +11,7 @@ import NavBar from "./components/NavBar";
 import Menu from "./components/Menu/Menu";
 import TopNavBar from "./components/TopNavBar";
 import NotificationDrawer from "./components/DrawerContent/NotificationDrawer";
+import Posts from "./pages/Posts/Posts";
 
 function App() {
   const [channels, setChannels] = useState([]);
@@ -19,6 +20,15 @@ function App() {
     "Starred",
     "Email",
     "Drafts",
+  ]);
+  const [topOptions, setTopOptions] = useState(["Channel1", "Populars"]);
+  const [topIndex, setTopIndex] = useState(0);
+  const [categoryIndex, setCategoryIndex] = useState(0);
+  const [posts, setPosts] = useState([
+    { title: "點解條街仲咁多口罩撚？", author: "Mr. A" },
+    { title: "荃灣二手上車邊度好(17)", author: "Mr. B" },
+    { title: "NASA發現木星有奇異綠光", author: "Mr. C" },
+    { title: "淺談澳洲office工嘅職埸文化", author: "Mr. D" },
   ]);
 
   const [drawerState, setDrawerState] = useState({
@@ -43,8 +53,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <TopNavBar />
-      <Container sx={{ bgcolor: "dark.main", color: "background.paper" }}>
+      <TopNavBar topOptions={topOptions} />
+      <Container
+        sx={{
+          bgcolor: "lightgray.main",
+          color: "black",
+          width: "100vw",
+          height: "100vh",
+        }}
+      >
+        <Posts posts={posts} />
         <Routes>
           <Route path="/" element={<Home />}></Route>
         </Routes>
