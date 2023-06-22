@@ -17,7 +17,17 @@ import MailIcon from "@mui/icons-material/Mail";
 import UtilityBar from "../Menu/UtilityBar";
 import Channels from "../Menu//Channels";
 import Search from "../Menu//Search";
-function MenuDrawer({ toggleDrawer, options }) {
+function MenuDrawer({
+  toggleDrawer,
+  options,
+  setCategoryIndex,
+  channels,
+  setChannelName,
+}) {
+  const linkStyle = {
+    textDecoration: "none",
+    color: "black",
+  };
   return (
     <Box sx={{ width: 280, flexGrow: 1 }} role="presentation">
       <Grid container spacing={2} columns={13} sx={{ height: "100vh" }}>
@@ -31,7 +41,7 @@ function MenuDrawer({ toggleDrawer, options }) {
               {options.map((text, index) => {
                 var link = `/` + text;
                 return (
-                  <Link to={link} key={index} className="link">
+                  <Link to={link} key={index} style={linkStyle}>
                     <ListItem disablePadding>
                       <ListItemButton sx={{ px: 3, py: 0.5 }}>
                         <ListItemIcon>
@@ -45,7 +55,11 @@ function MenuDrawer({ toggleDrawer, options }) {
               })}
             </List>
             <Divider />
-            <Channels />
+            <Channels
+              setCategoryIndex={setCategoryIndex}
+              channels={channels}
+              setChannelName={setChannelName}
+            />
           </Grid>
         </Grid>
       </Grid>

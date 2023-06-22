@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Grid } from "@mui/material";
 
-function TopNavBar({ topOptions }) {
+function TopNavBar({ topOptions, channelName }) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
@@ -17,6 +17,11 @@ function TopNavBar({ topOptions }) {
         }}
       >
         <Grid container>
+          <Grid item xs={6} align="center">
+            <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
+              {channelName}
+            </Typography>
+          </Grid>
           {topOptions.map((option, index) => {
             return (
               <Grid

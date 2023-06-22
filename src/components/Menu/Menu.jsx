@@ -5,10 +5,25 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 import MenuDrawer from "../DrawerContent/MenuDrawer";
 import NotificationDrawer from "../DrawerContent/NotificationDrawer";
 
-function Menu({ toggleDrawer, drawerState, options }) {
+function Menu({
+  toggleDrawer,
+  drawerState,
+  options,
+  setCategoryIndex,
+  channels,
+  setChannelName,
+}) {
   const list = (anchor) => {
     if (anchor === "left") {
-      return <MenuDrawer toggleDrawer={toggleDrawer} options={options} />;
+      return (
+        <MenuDrawer
+          toggleDrawer={toggleDrawer}
+          options={options}
+          setCategoryIndex={setCategoryIndex}
+          channels={channels}
+          setChannelName={setChannelName}
+        />
+      );
     } else if (anchor === "right") {
       return <NotificationDrawer toggleDrawer={toggleDrawer} />;
     }
