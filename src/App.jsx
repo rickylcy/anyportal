@@ -1,12 +1,7 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import {
-  useNavigate,
-  BrowserRouter as Router,
-  Route,
-  Routes,
-} from "react-router-dom";
-import { useSwipeable } from "react-swipeable";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { AnimatePresence } from "framer-motion";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
@@ -79,12 +74,6 @@ function App() {
     { author: "Mr. D", content: <div>AJAJJAJAJAJA</div> },
   ]);
 
-  const navigate = useNavigate();
-
-  const handleSwipe = () => {
-    navigate(`/category/${categoryIndex}`);
-  };
-  //https://stackoverflow.com/questions/70612769/how-do-i-recognize-swipe-events-in-react
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -97,32 +86,34 @@ function App() {
           padding: 0,
         }}
       >
-        <Routes>
-          <Route
-            exact
-            path="/category/:id"
-            element={
-              <Posts
-                posts={posts}
-                topOptions={topOptions}
-                channelName={channelName}
-                setThreadTitle={setThreadTitle}
-              />
-            }
-          ></Route>
-          <Route
-            exact
-            path="/thread/:id"
-            element={
-              <Thread
-                threadTitle={threadTitle}
-                categoryIndex={categoryIndex}
-                content={content}
-                comments={comments}
-              />
-            }
-          ></Route>
-        </Routes>
+        <AnimatePresence>
+          <Routes>
+            <Route
+              exact
+              path="/category/:id"
+              element={
+                <Posts
+                  posts={posts}
+                  topOptions={topOptions}
+                  channelName={channelName}
+                  setThreadTitle={setThreadTitle}
+                />
+              }
+            ></Route>
+            <Route
+              exact
+              path="/thread/:id"
+              element={
+                <Thread
+                  threadTitle={threadTitle}
+                  categoryIndex={categoryIndex}
+                  content={content}
+                  comments={comments}
+                />
+              }
+            ></Route>
+          </Routes>
+        </AnimatePresence>
         {/* <Button
           onClick={() => {
             console.log("channel name ", channelName);
