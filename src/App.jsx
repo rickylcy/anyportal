@@ -12,6 +12,7 @@ import NavBar from "./components/NavBar";
 import Menu from "./components/Menu/Menu";
 import Posts from "./pages/Posts/Posts";
 import Thread from "./pages/Posts/Thread";
+import Login from "./components/Account/login";
 
 function App() {
   //utilities
@@ -32,7 +33,19 @@ function App() {
       return;
     }
 
-    setDrawerState({ ...drawerState, [anchor]: open });
+    setDrawerState((drawerState) => ({ ...drawerState, [anchor]: open }));
+  };
+  const handleNotificationOpen = () => {};
+
+  const [loginOpen, setLoginOpen] = useState(false);
+
+  const handleLoginOpen = (event) => {
+    toggleDrawer("left", false);
+    console.log("open");
+  };
+
+  const handleLoginClose = () => {
+    setLoginOpen(false);
   };
 
   // FIXED STATE
@@ -114,14 +127,13 @@ function App() {
             ></Route>
           </Routes>
         </AnimatePresence>
-        {/* <Button
+        <button
           onClick={() => {
-            console.log("channel name ", channelName);
-            console.log("category index ", categoryIndex);
+            handleLoginOpen();
           }}
         >
           print
-        </Button> */}
+        </button>
 
         <Menu
           drawerState={drawerState}
@@ -130,7 +142,9 @@ function App() {
           setCategoryIndex={setCategoryIndex}
           channels={channels}
           setChannelName={setChannelName}
+          handleLoginOpen={handleLoginOpen}
         />
+        <Login loginOpen={loginOpen} handleLoginClose={handleLoginClose} />
         <NavBar toggleDrawer={toggleDrawer} />
       </Container>
     </ThemeProvider>

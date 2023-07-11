@@ -23,6 +23,7 @@ function MenuDrawer({
   setCategoryIndex,
   channels,
   setChannelName,
+  handleLoginOpen,
 }) {
   const linkStyle = {
     textDecoration: "none",
@@ -32,7 +33,10 @@ function MenuDrawer({
     <Box sx={{ width: 280, flexGrow: 1 }} role="presentation">
       <Grid container spacing={2} columns={13} sx={{ height: "100vh" }}>
         <Grid item xs={2.5} sx={{ bgcolor: "primary.main" }}>
-          <UtilityBar toggleDrawer={toggleDrawer} />
+          <UtilityBar
+            toggleDrawer={toggleDrawer}
+            handleLoginOpen={handleLoginOpen}
+          />
         </Grid>
         <Grid item xs={10} sx={{ opacity: 2, bgcolor: "secondary.main" }}>
           <Search />

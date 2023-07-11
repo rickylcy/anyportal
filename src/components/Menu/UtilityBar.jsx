@@ -8,7 +8,7 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Stack from "@mui/material/Stack";
 
-function UtilityBar({ toggleDrawer }) {
+function UtilityBar({ toggleDrawer, handleLoginOpen }) {
   return (
     <Box
       position="fixed"
@@ -27,11 +27,10 @@ function UtilityBar({ toggleDrawer }) {
         />
         <AccountCircleIcon
           href="/account"
+          align="center"
           sx={{ fontSize: 33, my: 1 }}
           style={{ color: "#999999" }}
-          onClick={() => {
-            console.log("AccountCircleIcon");
-          }}
+          onClick={handleLoginOpen()}
         />
         <DarkModeIcon
           href="/dark"

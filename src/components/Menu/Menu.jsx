@@ -12,6 +12,7 @@ function Menu({
   setCategoryIndex,
   channels,
   setChannelName,
+  handleLoginOpen,
 }) {
   const list = (anchor) => {
     if (anchor === "left") {
@@ -22,6 +23,7 @@ function Menu({
           setCategoryIndex={setCategoryIndex}
           channels={channels}
           setChannelName={setChannelName}
+          handleLoginOpen={handleLoginOpen}
         />
       );
     } else if (anchor === "right") {
