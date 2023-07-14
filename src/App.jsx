@@ -35,13 +35,24 @@ function App() {
 
     setDrawerState((drawerState) => ({ ...drawerState, [anchor]: open }));
   };
-  const handleNotificationOpen = () => {};
 
   const [loginOpen, setLoginOpen] = useState(false);
 
-  const handleLoginOpen = (event) => {
-    toggleDrawer("left", false);
-    console.log("open");
+  const handleLoginOpen = () => {
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["left"]: false,
+      ["top"]: true,
+    }));
+    setLoginOpen(true);
+    setTimeout(
+      () =>
+        setDrawerState((drawerState) => ({
+          ...drawerState,
+          ["top"]: false,
+        })),
+      2000
+    );
   };
 
   const handleLoginClose = () => {
@@ -127,13 +138,7 @@ function App() {
             ></Route>
           </Routes>
         </AnimatePresence>
-        <button
-          onClick={() => {
-            handleLoginOpen();
-          }}
-        >
-          print
-        </button>
+        <button onClick={handleLoginOpen}>print</button>
 
         <Menu
           drawerState={drawerState}

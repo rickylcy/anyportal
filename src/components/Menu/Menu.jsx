@@ -4,6 +4,7 @@ import SwipeableDrawer from "@mui/material/SwipeableDrawer";
 
 import MenuDrawer from "../DrawerContent/MenuDrawer";
 import NotificationDrawer from "../DrawerContent/NotificationDrawer";
+import AlertDrawer from "../DrawerContent/AlertDrawer";
 
 function Menu({
   toggleDrawer,
@@ -28,6 +29,8 @@ function Menu({
       );
     } else if (anchor === "right") {
       return <NotificationDrawer toggleDrawer={toggleDrawer} />;
+    } else if (anchor === "top") {
+      return <AlertDrawer toggleDrawer={toggleDrawer} />;
     }
   };
   return (

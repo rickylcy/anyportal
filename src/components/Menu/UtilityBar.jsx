@@ -30,7 +30,7 @@ function UtilityBar({ toggleDrawer, handleLoginOpen }) {
           align="center"
           sx={{ fontSize: 33, my: 1 }}
           style={{ color: "#999999" }}
-          onClick={handleLoginOpen()}
+          onClick={handleLoginOpen}
         />
         <DarkModeIcon
           href="/dark"

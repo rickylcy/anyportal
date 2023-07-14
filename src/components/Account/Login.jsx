@@ -8,9 +8,16 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 
 export default function Login({ loginOpen, handleLoginClose }) {
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event) => {
+    event.preventDefault();
+  };
   return (
     <div>
-      <Dialog open={loginOpen} onClose={handleLoginClose()}>
+      <Dialog open={loginOpen} onClose={handleLoginClose}>
         <DialogTitle>Subscribe</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -20,16 +27,27 @@ export default function Login({ loginOpen, handleLoginClose }) {
           <TextField
             autoFocus
             margin="dense"
-            id="name"
+            id="email"
             label="Email Address"
             type="email"
             fullWidth
             variant="standard"
+            sx={{ height: "5vh" }}
+          />
+          <TextField
+            autoFocus
+            margin="dense"
+            id="password"
+            label="Password"
+            type="password"
+            fullWidth
+            variant="standard"
+            sx={{ height: "5vh" }}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleLoginClose()}>Cancel</Button>
-          <Button onClick={handleLoginClose()}>Subscribe</Button>
+          <Button onClick={handleLoginClose}>Cancel</Button>
+          <Button onClick={handleLoginClose}>Subscribe</Button>
         </DialogActions>
       </Dialog>
     </div>
