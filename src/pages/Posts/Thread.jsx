@@ -57,9 +57,9 @@ function Thread({ threadTitle, categoryIndex, content, comments }) {
           height: "100vh",
           padding: 0,
         }}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
+        onTouchStart={(e) => onTouchStart(e)}
+        onTouchMove={(e) => onTouchMove(e)}
+        onTouchEnd={(e) => onTouchEnd(e)}
       >
         <Box sx={{ width: "100vw", flexGrow: 1 }} role="presentation">
           <TopAppBar categoryIndex={categoryIndex} threadTitle={threadTitle} />

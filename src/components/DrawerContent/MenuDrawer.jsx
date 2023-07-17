@@ -19,11 +19,13 @@ import Channels from "../Menu//Channels";
 import Search from "../Menu//Search";
 function MenuDrawer({
   toggleDrawer,
+  handleNotificationOpen,
   options,
   setCategoryIndex,
   channels,
   setChannelName,
   handleLoginOpen,
+  handleSettingOpen,
 }) {
   const linkStyle = {
     textDecoration: "none",
@@ -34,8 +36,9 @@ function MenuDrawer({
       <Grid container spacing={2} columns={13} sx={{ height: "100vh" }}>
         <Grid item xs={2.5} sx={{ bgcolor: "primary.main" }}>
           <UtilityBar
-            toggleDrawer={toggleDrawer}
+            handleNotificationOpen={handleNotificationOpen}
             handleLoginOpen={handleLoginOpen}
+            handleSettingOpen={handleSettingOpen}
           />
         </Grid>
         <Grid item xs={10} sx={{ opacity: 2, bgcolor: "secondary.main" }}>

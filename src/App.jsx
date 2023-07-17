@@ -24,6 +24,11 @@ function App() {
     right: false,
   });
 
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [logon, setLogon] = useState(false);
+
+  const [alertMessage, setAlertMessage] = useState("");
+
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event &&
@@ -36,27 +41,78 @@ function App() {
     setDrawerState((drawerState) => ({ ...drawerState, [anchor]: open }));
   };
 
-  const [loginOpen, setLoginOpen] = useState(false);
-
-  const handleLoginOpen = () => {
+  const handleNotificationOpen = (event) => {
     setDrawerState((drawerState) => ({
       ...drawerState,
       ["left"]: false,
-      ["top"]: true,
+      ["right"]: true,
     }));
-    setLoginOpen(true);
-    setTimeout(
-      () =>
-        setDrawerState((drawerState) => ({
-          ...drawerState,
-          ["top"]: false,
-        })),
-      2000
-    );
+  };
+
+  const handleSettingOpen = (event) => {
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["left"]: false,
+      ["bottom"]: true,
+    }));
+  };
+
+  const handleLoginOpen = () => {
+    if (logon === false) {
+      setAlertMessage("請先登入!");
+      setDrawerState((drawerState) => ({
+        ...drawerState,
+        ["left"]: false,
+        ["top"]: true,
+      }));
+      setLoginOpen(true);
+      setTimeout(
+        () =>
+          setDrawerState((drawerState) => ({
+            ...drawerState,
+            ["top"]: false,
+          })),
+        1000
+      );
+    } else if (logon === true) {
+      console.log("LOGONed");
+      setDrawerState((drawerState) => ({
+        ...drawerState,
+        ["left"]: false,
+        ["right"]: true,
+      }));
+    }
   };
 
   const handleLoginClose = () => {
     setLoginOpen(false);
+  };
+
+  const loginCheck = (username, password) => {
+    console.log("username: ", username);
+    console.log("password: ", password);
+    if (username === "" || password === "") {
+      setAlertMessage("請輸入ID及密碼");
+      console.log("empty");
+      setDrawerState((drawerState) => ({
+        ...drawerState,
+        ["left"]: false,
+        ["top"]: true,
+      }));
+      setTimeout(
+        () =>
+          setDrawerState((drawerState) => ({
+            ...drawerState,
+            ["top"]: false,
+          })),
+        1000
+      );
+    }
+    if (username === "admin" && password === "admin") {
+      console.log("OK");
+      setLoginOpen(false);
+      setLogon(true);
+    }
   };
 
   // FIXED STATE
@@ -141,15 +197,22 @@ function App() {
         <button onClick={handleLoginOpen}>print</button>
 
         <Menu
-          drawerState={drawerState}
           toggleDrawer={toggleDrawer}
+          drawerState={drawerState}
+          handleNotificationOpen={handleNotificationOpen}
           options={options}
           setCategoryIndex={setCategoryIndex}
           channels={channels}
           setChannelName={setChannelName}
           handleLoginOpen={handleLoginOpen}
+          handleSettingOpen={handleSettingOpen}
+          alertMessage={alertMessage}
         />
-        <Login loginOpen={loginOpen} handleLoginClose={handleLoginClose} />
+        <Login
+          loginOpen={loginOpen}
+          handleLoginClose={handleLoginClose}
+          loginCheck={loginCheck}
+        />
         <NavBar toggleDrawer={toggleDrawer} />
       </Container>
     </ThemeProvider>
