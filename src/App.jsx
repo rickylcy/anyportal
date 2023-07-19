@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql,
+} from "@apollo/client";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
@@ -115,6 +122,41 @@ function App() {
     }
   };
 
+  const GET_THREAD = gql`
+    query threads {
+      threads {
+        title
+        author
+        content
+      }
+    }
+  `;
+  //https://www.apollographql.com/docs/apollo-server/getting-started#step-4-define-your-data-set
+  //https://www.apollographql.com/docs/react/get-started
+  function DisplayThread() {
+    const { loading, error, data } = useQuery(GET_THREAD);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error : {error.message}</p>;
+
+    console.log("DDD", data);
+    return data.locations?.map(({ id, name, description, photo }) => (
+      <div key={id}>
+        <h3>{name}</h3>
+        <img
+          width="400"
+          height="250"
+          alt="location-reference"
+          src={`${photo}`}
+        />
+        <br />
+        <b>About this location:</b>
+        <p>{description}</p>
+        <br />
+      </div>
+    ));
+  }
+
   // FIXED STATE
   const [channels, setChannels] = useState([
     "吹水台",
@@ -195,7 +237,7 @@ function App() {
           </Routes>
         </AnimatePresence>
         <button onClick={handleLoginOpen}>print</button>
-
+        <DisplayThread />
         <Menu
           toggleDrawer={toggleDrawer}
           drawerState={drawerState}
