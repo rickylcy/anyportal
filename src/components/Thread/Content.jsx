@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { Grid, Typography } from "@mui/material";
 
-function Comment({ index, comment }) {
+function Content({ author, content }) {
   return (
     <Box
       sx={{
@@ -19,14 +19,21 @@ function Comment({ index, comment }) {
     >
       <Paper elevation={3}>
         <Grid container>
-          <Grid item xs={1}>
-            <Typography variant="subtitle2"> #{index + 1}</Typography>
+          <Grid item xs={2}>
+            <Typography
+              variant="subtitle2"
+              color={"#E49B0F"}
+              fontWeight={"bold"}
+            >
+              {" "}
+              #樓主
+            </Typography>
           </Grid>
           <Grid item xs={5}>
-            <Typography variant="subtitle2">{comment?.author}</Typography>
+            <Typography variant="subtitle2">{author}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1">{comment?.content}</Typography>
+            <Typography variant="subtitle1">{content}</Typography>
           </Grid>
         </Grid>
       </Paper>
@@ -34,4 +41,4 @@ function Comment({ index, comment }) {
   );
 }
 
-export default Comment;
+export default Content;

@@ -123,23 +123,54 @@ function App() {
   };
 
   const GET_THREAD = gql`
-    query threads {
+    query threads($categoryIndex: Int) {
+      threads(cate: $categoryIndex) {
+        title
+        author
+        content
+        comments {
+          content
+          author
+        }
+      }
+    }
+  `;
+
+  const GET_USERS = gql`
+    query users {
       threads {
         title
         author
         content
+        comments {
+          content
+          author
+        }
       }
     }
   `;
+
   //https://www.apollographql.com/docs/apollo-server/getting-started#step-4-define-your-data-set
   //https://www.apollographql.com/docs/react/get-started
   function DisplayThread() {
-    const { loading, error, data } = useQuery(GET_THREAD);
+    const { loading, error, data } = useQuery(GET_THREAD, {
+      variables: { cate: 0 },
+    });
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error.message}</p>;
 
     console.log("DDD", data);
+    setPosts(data.threads);
+  }
+
+  function FetchUser() {
+    const { loading, error, data } = useQuery(GET_USERS);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p>Error : {error.message}</p>;
+
+    console.log("USERS", data);
     return data.locations?.map(({ id, name, description, photo }) => (
       <div key={id}>
         <h3>{name}</h3>
@@ -177,24 +208,22 @@ function App() {
   const [channelName, setChannelName] = useState("吹水台");
   const [topOptions, setTopOptions] = useState(["Populars"]);
   const [categoryIndex, setCategoryIndex] = useState(0);
-  const [posts, setPosts] = useState([
-    { title: "點解條街仲咁多口罩撚？", author: "Mr. A", thread: 1 },
-    { title: "荃灣二手上車邊度好(17)", author: "Mr. B", thread: 2 },
-    { title: "NASA發現木星有奇異綠光", author: "Mr. C", thread: 3 },
-    { title: "淺談澳洲office工嘅職埸文化", author: "Mr. D", thread: 4 },
-  ]);
+  const [posts, setPosts] = useState([]);
   const [threadTitle, setThreadTitle] = useState(null);
+  const [thread, setThread] = useState();
+  const [author, setAuthor] = useState();
 
   //inpost
-  const [content, setContent] = useState({
-    author: "Mr. A",
-    content: <div>畫面好似唔錯，但人物好似好多轉外國人咁？</div>,
-  });
-  const [comments, setComments] = useState([
-    { author: "Mr. B", content: <div>係啊係啊</div> },
-    { author: "Mr. C", content: <div>成個傻仔咁</div> },
-    { author: "Mr. D", content: <div>AJAJJAJAJAJA</div> },
-  ]);
+  const [content, setContent] = useState();
+  const [comments, setComments] = useState([]);
+
+  const ClickThread = (index) => {
+    setThreadTitle(posts[index].title);
+    setContent(posts[index].content);
+    setComments(posts[index].comments);
+    setAuthor(posts[index].author);
+    setThread(posts[index]);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -218,7 +247,7 @@ function App() {
                   posts={posts}
                   topOptions={topOptions}
                   channelName={channelName}
-                  setThreadTitle={setThreadTitle}
+                  ClickThread={ClickThread}
                 />
               }
             ></Route>
@@ -230,6 +259,7 @@ function App() {
                   threadTitle={threadTitle}
                   categoryIndex={categoryIndex}
                   content={content}
+                  author={author}
                   comments={comments}
                 />
               }

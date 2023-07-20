@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
 import TopNavBar from "../../components/TopNavBar";
-function Posts({ posts, topOptions, channelName, setThreadTitle }) {
+function Posts({ posts, topOptions, channelName, ClickThread }) {
   const linkStyle = {
     textDecoration: "none",
     color: "black",
@@ -27,7 +27,7 @@ function Posts({ posts, topOptions, channelName, setThreadTitle }) {
                 sx={{ height: "9vh" }}
                 onClick={() => {
                   console.log("THREAD" + post.thread);
-                  setThreadTitle(post.title);
+                  ClickThread(index);
                 }}
               >
                 <Grid container>

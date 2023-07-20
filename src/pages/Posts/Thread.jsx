@@ -9,8 +9,9 @@ import { motion } from "framer-motion";
 import TopAppBar from "../../components/Thread/TopAppBar";
 import PageAppBar from "../../components/Thread/PageAppBar";
 import Comment from "../../components/Thread/Comment";
+import Content from "../../components/Thread/Content";
 
-function Thread({ threadTitle, categoryIndex, content, comments }) {
+function Thread({ threadTitle, categoryIndex, author, content, comments }) {
   const navigate = useNavigate();
 
   //https://stackoverflow.com/questions/70612769/how-do-i-recognize-swipe-events-in-react
@@ -54,7 +55,7 @@ function Thread({ threadTitle, categoryIndex, content, comments }) {
           bgcolor: "lightgray.main",
           color: "black",
           width: "100vw",
-          height: "100vh",
+          height: "auto",
           padding: 0,
         }}
         onTouchStart={(e) => onTouchStart(e)}
@@ -64,6 +65,7 @@ function Thread({ threadTitle, categoryIndex, content, comments }) {
         <Box sx={{ width: "100vw", flexGrow: 1 }} role="presentation">
           <TopAppBar categoryIndex={categoryIndex} threadTitle={threadTitle} />
           <PageAppBar />
+          <Content author={author} content={content} />
           {comments.map((comment, index) => {
             console.log("comment", comment);
             return <Comment index={index} comment={comment} />;
