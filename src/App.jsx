@@ -124,7 +124,7 @@ function App() {
 
   const GET_THREAD = gql`
     query threads($categoryIndex: Int) {
-      threads(cate: $categoryIndex) {
+      threads(category: $categoryIndex) {
         title
         author
         content
@@ -154,7 +154,7 @@ function App() {
   //https://www.apollographql.com/docs/react/get-started
   function DisplayThread() {
     const { loading, error, data } = useQuery(GET_THREAD, {
-      variables: { cate: 0 },
+      variables: { categoryIndex: categoryIndex },
     });
 
     if (loading) return <p>Loading...</p>;
