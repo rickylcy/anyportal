@@ -55,7 +55,7 @@ function Thread({ threadTitle, categoryIndex, author, content, comments }) {
           bgcolor: "lightgray.main",
           color: "black",
           width: "100vw",
-          height: "auto",
+          height: "100vh",
           padding: 0,
         }}
         onTouchStart={(e) => onTouchStart(e)}

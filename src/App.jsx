@@ -14,12 +14,16 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./styles/Styles";
 import Container from "@mui/material/Container";
-
 import NavBar from "./components/NavBar";
 import Menu from "./components/Menu/Menu";
 import Posts from "./pages/Posts/Posts";
 import Thread from "./pages/Posts/Thread";
 import Login from "./components/Account/login";
+
+import MenuDrawer from "./components/DrawerContent/MenuDrawer";
+import NotificationDrawer from "./components/DrawerContent/NotificationDrawer";
+import AlertDrawer from "./components/DrawerContent/AlertDrawer";
+import SettingDrawer from "./components/DrawerContent/SettingDrawer";
 
 function App() {
   //utilities
@@ -35,6 +39,31 @@ function App() {
   const [logon, setLogon] = useState(false);
 
   const [alertMessage, setAlertMessage] = useState("");
+
+  const list = (anchor) => {
+    if (anchor === "left") {
+      return (
+        <MenuDrawer
+          toggleDrawer={toggleDrawer}
+          handleNotificationOpen={handleNotificationOpen}
+          options={options}
+          setCategoryIndex={setCategoryIndex}
+          channels={channels}
+          setChannelName={setChannelName}
+          handleLoginOpen={handleLoginOpen}
+          handleSettingOpen={handleSettingOpen}
+        />
+      );
+    } else if (anchor === "right") {
+      return <NotificationDrawer toggleDrawer={toggleDrawer} />;
+    } else if (anchor === "top") {
+      return (
+        <AlertDrawer toggleDrawer={toggleDrawer} alertMessage={alertMessage} />
+      );
+    } else if (anchor === "bottom") {
+      return <SettingDrawer toggleDrawer={toggleDrawer} />;
+    }
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -225,6 +254,25 @@ function App() {
     setThread(posts[index]);
   };
 
+  const [newPostDrawerOpen, setNewPostDrawerOpen] = useState(false);
+
+  const toggleNewPostDrawerOpen = (event) => {
+    console.log("11");
+    setNewPostDrawerOpen(true);
+  };
+  const toggleNewPostDrawerClose = (event) => {
+    setNewPostDrawerOpen(false);
+  };
+  const toggleNewPostDrawer = (newOpen) => () => {
+    console.log(newPostDrawerOpen);
+    console.log("2");
+    setNewPostDrawerOpen(true);
+  };
+
+  const handleNewPostDrawerOpen = (event) => {
+    console.log("asfasf");
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -268,7 +316,9 @@ function App() {
         </AnimatePresence>
         <button onClick={handleLoginOpen}>print</button>
         <DisplayThread />
+
         <Menu
+          list={list}
           toggleDrawer={toggleDrawer}
           drawerState={drawerState}
           handleNotificationOpen={handleNotificationOpen}
