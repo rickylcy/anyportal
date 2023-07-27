@@ -8,7 +8,7 @@ import MoreIcon from "@mui/icons-material/MoreVert";
 import SearchIcon from "@mui/icons-material/Search";
 import AddIcon from "@mui/icons-material/Add";
 
-function NavBar({ toggleDrawer }) {
+function NavBar({ toggleDrawer, toggleNewPostDrawerOpen }) {
   return (
     <AppBar
       position="fixed"
@@ -27,7 +27,7 @@ function NavBar({ toggleDrawer }) {
           <MenuIcon />
         </IconButton>
         <Box sx={{ flexGrow: 1 }} />
-        <IconButton color="secondary">
+        <IconButton color="secondary" onClick={() => toggleNewPostDrawerOpen()}>
           <AddIcon />
         </IconButton>
         <IconButton color="secondary">

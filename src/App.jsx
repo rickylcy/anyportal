@@ -15,7 +15,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import theme from "./styles/Styles";
 import Container from "@mui/material/Container";
 import NavBar from "./components/NavBar";
-import Menu from "./components/Menu/Menu";
+import Drawer from "./components/Menu/Drawer";
 import Posts from "./pages/Posts/Posts";
 import Thread from "./pages/Posts/Thread";
 import Login from "./components/Account/login";
@@ -24,8 +24,25 @@ import MenuDrawer from "./components/DrawerContent/MenuDrawer";
 import NotificationDrawer from "./components/DrawerContent/NotificationDrawer";
 import AlertDrawer from "./components/DrawerContent/AlertDrawer";
 import SettingDrawer from "./components/DrawerContent/SettingDrawer";
+import NewPostDrawer from "./components/DrawerContent/NewPostDrawer";
 
 function App() {
+  // FIXED STATE
+  const [channels, setChannels] = useState([
+    "吹水台",
+    "自選台",
+    "創意台",
+    "講故台",
+  ]);
+  const [options, setOptions] = useState([
+    "歷史",
+    "Starred",
+    "Email",
+    "Drafts",
+  ]);
+
+  const [topIndex, setTopIndex] = useState(0);
+
   //utilities
   //DRAWERS
   const [drawerState, setDrawerState] = useState({
@@ -34,6 +51,7 @@ function App() {
     bottom: false,
     right: false,
   });
+  const [newPostDrawerOpen, setNewPostDrawerOpen] = useState(false);
 
   const [loginOpen, setLoginOpen] = useState(false);
   const [logon, setLogon] = useState(false);
@@ -61,8 +79,37 @@ function App() {
         <AlertDrawer toggleDrawer={toggleDrawer} alertMessage={alertMessage} />
       );
     } else if (anchor === "bottom") {
+      if (newPostDrawerOpen === true) {
+        return (
+          <NewPostDrawer
+            toggleDrawer={toggleDrawer}
+            toggleNewPostDrawerClose={toggleNewPostDrawerClose}
+            channels={channels}
+          />
+        );
+      }
       return <SettingDrawer toggleDrawer={toggleDrawer} />;
     }
+  };
+
+  //NEW POST DRAWER
+  const toggleNewPostDrawerOpen = (event) => {
+    setNewPostDrawerOpen(true);
+    console.log("11");
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["left"]: false,
+      ["bottom"]: true,
+    }));
+  };
+
+  const toggleNewPostDrawerClose = (event) => {
+    setNewPostDrawerOpen(false);
+    console.log("22");
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["bottom"]: false,
+    }));
   };
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -217,22 +264,6 @@ function App() {
     ));
   }
 
-  // FIXED STATE
-  const [channels, setChannels] = useState([
-    "吹水台",
-    "自選台",
-    "創意台",
-    "講故台",
-  ]);
-  const [options, setOptions] = useState([
-    "歷史",
-    "Starred",
-    "Email",
-    "Drafts",
-  ]);
-
-  const [topIndex, setTopIndex] = useState(0);
-
   //
   const [channelName, setChannelName] = useState("吹水台");
   const [topOptions, setTopOptions] = useState(["Populars"]);
@@ -252,25 +283,6 @@ function App() {
     setComments(posts[index].comments);
     setAuthor(posts[index].author);
     setThread(posts[index]);
-  };
-
-  const [newPostDrawerOpen, setNewPostDrawerOpen] = useState(false);
-
-  const toggleNewPostDrawerOpen = (event) => {
-    console.log("11");
-    setNewPostDrawerOpen(true);
-  };
-  const toggleNewPostDrawerClose = (event) => {
-    setNewPostDrawerOpen(false);
-  };
-  const toggleNewPostDrawer = (newOpen) => () => {
-    console.log(newPostDrawerOpen);
-    console.log("2");
-    setNewPostDrawerOpen(true);
-  };
-
-  const handleNewPostDrawerOpen = (event) => {
-    console.log("asfasf");
   };
 
   return (
@@ -314,28 +326,23 @@ function App() {
             ></Route>
           </Routes>
         </AnimatePresence>
-        <button onClick={handleLoginOpen}>print</button>
+        {/*  <button onClick={handleLoginOpen}>print</button> */}
         <DisplayThread />
 
-        <Menu
+        <Drawer
           list={list}
           toggleDrawer={toggleDrawer}
           drawerState={drawerState}
-          handleNotificationOpen={handleNotificationOpen}
-          options={options}
-          setCategoryIndex={setCategoryIndex}
-          channels={channels}
-          setChannelName={setChannelName}
-          handleLoginOpen={handleLoginOpen}
-          handleSettingOpen={handleSettingOpen}
-          alertMessage={alertMessage}
         />
         <Login
           loginOpen={loginOpen}
           handleLoginClose={handleLoginClose}
           loginCheck={loginCheck}
         />
-        <NavBar toggleDrawer={toggleDrawer} />
+        <NavBar
+          toggleDrawer={toggleDrawer}
+          toggleNewPostDrawerOpen={toggleNewPostDrawerOpen}
+        />
       </Container>
     </ThemeProvider>
   );

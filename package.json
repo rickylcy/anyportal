@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "eslint src --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "build-dev": "tsc && vite build --mode development"
+    "build-dev": "tsc && vite build --mode development",
+    "deploy": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@apollo/client": "^3.7.17",
