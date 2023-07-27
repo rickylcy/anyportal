@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -8,8 +8,15 @@ import NativeSelect from "@mui/material/NativeSelect";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Divider from "@mui/material/Divider";
+import SendIcon from "@mui/icons-material/Send";
 
-function NewPostDrawer({ toggleNewPostDrawerClose, channels }) {
+function NewPostDrawer({
+  toggleNewPostDrawerClose,
+  channels,
+  setNewTitle,
+  setNewContent,
+  CreateThread,
+}) {
   return (
     <Box
       sx={{ width: "100vw", height: "100vh", flexGrow: 1 }}
@@ -62,6 +69,17 @@ function NewPostDrawer({ toggleNewPostDrawerClose, channels }) {
               })}
             </NativeSelect>
           </Grid>
+          <Grid item xs={1} align="center" onClick={() => CreateThread()}>
+            <SendIcon
+              color="white"
+              sx={{
+                fontSize: 25,
+                my: 0.5,
+                mr: 1,
+              }}
+              style={{ transform: "rotate(-35deg)" }}
+            />
+          </Grid>
         </Grid>
       </AppBar>
       <Stack
@@ -79,6 +97,7 @@ function NewPostDrawer({ toggleNewPostDrawerClose, channels }) {
           variant="filled"
           size="small"
           InputProps={{ disableUnderline: true }}
+          onChange={(e) => setNewTitle(e.target.value)}
         />
         <Divider />
         <textarea
@@ -94,6 +113,7 @@ function NewPostDrawer({ toggleNewPostDrawerClose, channels }) {
             backgroundColor: "#f0f0f0",
           }}
           placeholder="撰寫內容..."
+          onChange={(e) => setNewContent(e.target.value)}
         ></textarea>
         {/* <TextField
           hiddenLabel

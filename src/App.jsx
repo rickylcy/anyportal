@@ -7,6 +7,7 @@ import {
   InMemoryCache,
   ApolloProvider,
   useQuery,
+  useMutation,
   gql,
 } from "@apollo/client";
 
@@ -85,6 +86,9 @@ function App() {
             toggleDrawer={toggleDrawer}
             toggleNewPostDrawerClose={toggleNewPostDrawerClose}
             channels={channels}
+            setNewTitle={setNewTitle}
+            setNewContent={setNewContent}
+            CreateThread={CreateThread}
           />
         );
       }
@@ -226,6 +230,14 @@ function App() {
     }
   `;
 
+  const CREATE_THREAD = gql`
+    mutation CreateThread($title: String, $content: String) {
+      CreateThread(title: $title, content: $content) {
+        ID
+      }
+    }
+  `;
+
   //https://www.apollographql.com/docs/apollo-server/getting-started#step-4-define-your-data-set
   //https://www.apollographql.com/docs/react/get-started
   function DisplayThread() {
@@ -236,8 +248,26 @@ function App() {
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error : {error.message}</p>;
 
-    console.log("DDD", data);
+    console.log("Threads: ", data);
     setPosts(data.threads);
+  }
+
+  const [newTitle, setNewTitle] = useState();
+  const [newContent, setNewContent] = useState();
+  const [CreateThreadMutation] = useMutation(CREATE_THREAD);
+  function CreateThread() {
+    console.log("CREATEING THREAD...");
+    console.log("TITLE: ", newTitle);
+    console.log("CONTENT: ", newContent);
+    CreateThreadMutation({
+      variables: { title: newTitle, content: newContent },
+    })
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((err) => {
+        throw err;
+      });
   }
 
   function FetchUser() {
