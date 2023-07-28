@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import {
   ApolloClient,
@@ -354,6 +359,19 @@ function App() {
     setThread(posts[index]);
   };
 
+  function Index() {
+    const navigate = useNavigate();
+    useEffect(() => {
+      setTimeout(() => {
+        // 👇 Redirects to about page, note the `replace: true`
+
+        navigate("/category/0", { replace: true });
+      }, 1000);
+    }, []);
+
+    return <div>Redirecting...</div>;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -368,6 +386,7 @@ function App() {
       >
         <AnimatePresence>
           <Routes>
+            <Route exact path="/" element={<Index />} />
             <Route
               exact
               path="/category/:id"
