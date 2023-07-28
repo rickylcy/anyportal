@@ -17,6 +17,7 @@ function NewPostDrawer({
   setNewContent,
   CreateThread,
 }) {
+  const [selectedId, setSelectedId] = useState(0);
   return (
     <Box
       sx={{ width: "100vw", height: "100vh", flexGrow: 1 }}
@@ -43,25 +44,27 @@ function NewPostDrawer({
           <Grid item xs={10} align="center">
             <NativeSelect
               defaultValue={"吹水台"}
-              inputProps={{
-                name: "chaanel",
-                id: "uncontrolled-native",
-              }}
               disableUnderline
               sx={{ color: "primary" }}
               style={{
                 fontSize: "1.5rem",
                 color: "white",
               }}
+              onChange={(e) => {
+                console.log(e.target.value);
+                setSelectedId(e.target.value);
+              }}
             >
               {channels.map((channel, index) => {
                 return (
                   <option
-                    value={channel}
+                    value={index}
+                    content={channel}
                     style={{
                       color: "Black",
                       fontSize: "0.8rem",
                     }}
+                    key={index}
                   >
                     {channel}
                   </option>
@@ -69,7 +72,12 @@ function NewPostDrawer({
               })}
             </NativeSelect>
           </Grid>
-          <Grid item xs={1} align="center" onClick={() => CreateThread()}>
+          <Grid
+            item
+            xs={1}
+            align="center"
+            onClick={() => CreateThread(selectedId)}
+          >
             <SendIcon
               color="white"
               sx={{

@@ -6,6 +6,7 @@ import {
   ApolloClient,
   InMemoryCache,
   ApolloProvider,
+  useLazyQuery,
   useQuery,
   useMutation,
   gql,
@@ -15,7 +16,6 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "./styles/Styles";
 import Container from "@mui/material/Container";
-import NavBar from "./components/NavBar";
 import Drawer from "./components/Menu/Drawer";
 import Posts from "./pages/Posts/Posts";
 import Thread from "./pages/Posts/Thread";
@@ -58,6 +58,19 @@ function App() {
   const [logon, setLogon] = useState(false);
 
   const [alertMessage, setAlertMessage] = useState("");
+
+  //
+  const [channelName, setChannelName] = useState("吹水台");
+  const [topOptions, setTopOptions] = useState(["Populars"]);
+  const [categoryIndex, setCategoryIndex] = useState(0);
+  const [posts, setPosts] = useState([]);
+  const [threadTitle, setThreadTitle] = useState(null);
+  const [thread, setThread] = useState();
+  const [author, setAuthor] = useState();
+
+  //inpost
+  const [content, setContent] = useState();
+  const [comments, setComments] = useState([]);
 
   const list = (anchor) => {
     if (anchor === "left") {
@@ -231,16 +244,49 @@ function App() {
   `;
 
   const CREATE_THREAD = gql`
-    mutation CreateThread($title: String, $content: String) {
-      CreateThread(title: $title, content: $content) {
-        ID
-      }
+    mutation CreateThread(
+      $title: String
+      $content: String
+      $categoryIndex: Int
+    ) {
+      CreateThread(title: $title, content: $content, category: $categoryIndex)
     }
   `;
+  const [loadThreads, { loading, error, data, refetch }] =
+    useLazyQuery(GET_THREAD);
+
+  useEffect(() => {
+    console.log("First Fetch");
+    loadThreads({
+      variables: { categoryIndex: categoryIndex },
+    });
+    if (loading) return console.log("LOADING");
+    if (error) return <p>Error : {error.message}</p>;
+  }, []);
+
+  useEffect(() => {
+    console.log("Fetch Channel");
+    console.log(categoryIndex);
+    loadThreads({
+      variables: { categoryIndex: categoryIndex },
+    });
+    if (loading) return console.log("LOADING");
+    if (error) return <p>Error : {error.message}</p>;
+  }, [categoryIndex]);
+
+  useEffect(() => {
+    console.log("Threads: ", data);
+    setPosts(data?.threads);
+  }, [data]);
+
+  const handleRefresh = () => {
+    console.log("REFRESH");
+    refetch();
+  };
 
   //https://www.apollographql.com/docs/apollo-server/getting-started#step-4-define-your-data-set
   //https://www.apollographql.com/docs/react/get-started
-  function DisplayThread() {
+  /* function DisplayThread() {
     const { loading, error, data } = useQuery(GET_THREAD, {
       variables: { categoryIndex: categoryIndex },
     });
@@ -250,20 +296,26 @@ function App() {
 
     console.log("Threads: ", data);
     setPosts(data.threads);
-  }
+  } */
 
   const [newTitle, setNewTitle] = useState();
   const [newContent, setNewContent] = useState();
   const [CreateThreadMutation] = useMutation(CREATE_THREAD);
-  function CreateThread() {
+  function CreateThread(categoryId) {
     console.log("CREATEING THREAD...");
     console.log("TITLE: ", newTitle);
     console.log("CONTENT: ", newContent);
+    console.log("Category: ", typeof parseInt(categoryId));
     CreateThreadMutation({
-      variables: { title: newTitle, content: newContent },
+      variables: {
+        title: newTitle,
+        content: newContent,
+        categoryIndex: parseInt(categoryId),
+      },
     })
       .then((data) => {
         console.log(data);
+        toggleNewPostDrawerClose();
       })
       .catch((err) => {
         throw err;
@@ -293,19 +345,6 @@ function App() {
       </div>
     ));
   }
-
-  //
-  const [channelName, setChannelName] = useState("吹水台");
-  const [topOptions, setTopOptions] = useState(["Populars"]);
-  const [categoryIndex, setCategoryIndex] = useState(0);
-  const [posts, setPosts] = useState([]);
-  const [threadTitle, setThreadTitle] = useState(null);
-  const [thread, setThread] = useState();
-  const [author, setAuthor] = useState();
-
-  //inpost
-  const [content, setContent] = useState();
-  const [comments, setComments] = useState([]);
 
   const ClickThread = (index) => {
     setThreadTitle(posts[index].title);
@@ -338,6 +377,9 @@ function App() {
                   topOptions={topOptions}
                   channelName={channelName}
                   ClickThread={ClickThread}
+                  toggleDrawer={toggleDrawer}
+                  toggleNewPostDrawerOpen={toggleNewPostDrawerOpen}
+                  handleRefresh={handleRefresh}
                 />
               }
             ></Route>
@@ -357,7 +399,7 @@ function App() {
           </Routes>
         </AnimatePresence>
         {/*  <button onClick={handleLoginOpen}>print</button> */}
-        <DisplayThread />
+        {/* <DisplayThread /> */}
 
         <Drawer
           list={list}
@@ -368,10 +410,6 @@ function App() {
           loginOpen={loginOpen}
           handleLoginClose={handleLoginClose}
           loginCheck={loginCheck}
-        />
-        <NavBar
-          toggleDrawer={toggleDrawer}
-          toggleNewPostDrawerOpen={toggleNewPostDrawerOpen}
         />
       </Container>
     </ThemeProvider>
