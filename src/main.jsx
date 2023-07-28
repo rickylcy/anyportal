@@ -6,8 +6,8 @@ import { BrowserRouter } from "react-router-dom";
 import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 
 const client = new ApolloClient({
-  //uri: "https://australia-southeast1-anyportal-server.cloudfunctions.net/api",
-  uri: "http://localhost:4000",
+  uri: "https://australia-southeast1-anyportal-server.cloudfunctions.net/api",
+  //uri: "http://localhost:4000",
   cache: new InMemoryCache(),
 });
 

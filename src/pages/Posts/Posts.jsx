@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import NavBar from "../../components/NavBar";
 
 import TopNavBar from "../../components/TopNavBar";
+import { NoEncryption } from "@mui/icons-material";
 function Posts({
   posts,
   topOptions,
