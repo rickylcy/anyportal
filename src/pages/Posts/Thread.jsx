@@ -10,8 +10,16 @@ import TopAppBar from "../../components/Thread/TopAppBar";
 import PageAppBar from "../../components/Thread/PageAppBar";
 import Comment from "../../components/Thread/Comment";
 import Content from "../../components/Thread/Content";
+import ButtomAppBar from "../../components/Thread/ButtomAppBar";
 
-function Thread({ threadTitle, categoryIndex, author, content, comments }) {
+function Thread({
+  threadTitle,
+  categoryIndex,
+  author,
+  content,
+  comments,
+  toggleReplyDrawerOpen,
+}) {
   const navigate = useNavigate();
 
   //https://stackoverflow.com/questions/70612769/how-do-i-recognize-swipe-events-in-react
@@ -70,6 +78,7 @@ function Thread({ threadTitle, categoryIndex, author, content, comments }) {
             console.log("comment", comment);
             return <Comment index={index} comment={comment} />;
           })}
+          <ButtomAppBar toggleReplyDrawerOpen={toggleReplyDrawerOpen} />
         </Box>
       </Container>
     </motion.div>

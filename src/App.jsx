@@ -16,6 +16,8 @@ import {
   useMutation,
   gql,
 } from "@apollo/client";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
@@ -31,6 +33,7 @@ import NotificationDrawer from "./components/DrawerContent/NotificationDrawer";
 import AlertDrawer from "./components/DrawerContent/AlertDrawer";
 import SettingDrawer from "./components/DrawerContent/SettingDrawer";
 import NewPostDrawer from "./components/DrawerContent/NewPostDrawer";
+import ReplyDrawer from "./components/DrawerContent/ReplyDrawer";
 
 function App() {
   // FIXED STATE
@@ -58,7 +61,7 @@ function App() {
     right: false,
   });
   const [newPostDrawerOpen, setNewPostDrawerOpen] = useState(false);
-
+  const [replyDrawerOpen, setReplyDrawerOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [logon, setLogon] = useState(false);
 
@@ -69,6 +72,7 @@ function App() {
   const [topOptions, setTopOptions] = useState(["Populars"]);
   const [categoryIndex, setCategoryIndex] = useState(0);
   const [posts, setPosts] = useState([]);
+  const [threadID, setThreadID] = useState(null);
   const [threadTitle, setThreadTitle] = useState(null);
   const [thread, setThread] = useState();
   const [author, setAuthor] = useState();
@@ -92,6 +96,18 @@ function App() {
         />
       );
     } else if (anchor === "right") {
+      if (replyDrawerOpen === true) {
+        return (
+          <ReplyDrawer
+            channelName={channelName}
+            toggleReplyDrawerClose={toggleReplyDrawerClose}
+            channels={channels}
+            threadTitle={threadTitle}
+            CreateComment={CreateComment}
+            setNewComment={setNewComment}
+          />
+        );
+      }
       return <NotificationDrawer toggleDrawer={toggleDrawer} />;
     } else if (anchor === "top") {
       return (
@@ -131,6 +147,23 @@ function App() {
     setDrawerState((drawerState) => ({
       ...drawerState,
       ["bottom"]: false,
+    }));
+  };
+
+  //REPLY DRAWER
+  const toggleReplyDrawerOpen = (event) => {
+    setReplyDrawerOpen(true);
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["right"]: true,
+    }));
+  };
+
+  const toggleReplyDrawerClose = (event) => {
+    setReplyDrawerOpen(false);
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["right"]: false,
     }));
   };
 
@@ -220,9 +253,25 @@ function App() {
     }
   };
 
-  const GET_THREAD = gql`
+  const GET_ALL_THREAD = gql`
     query threads($categoryIndex: Int) {
       threads(category: $categoryIndex) {
+        _id
+        title
+        author
+        content
+        comments {
+          content
+          author
+        }
+      }
+    }
+  `;
+
+  const FETCH_THREAD = gql`
+    query thread($threadID: String) {
+      thread(threadID: $threadID) {
+        _id
         title
         author
         content
@@ -257,19 +306,37 @@ function App() {
       CreateThread(title: $title, content: $content, category: $categoryIndex)
     }
   `;
-  const [loadThreads, { loading, error, data, refetch }] =
-    useLazyQuery(GET_THREAD);
 
-  useEffect(() => {
-    console.log("First Fetch");
-    loadThreads({
+  const CREATE_COMMENT = gql`
+    mutation CreateComment($threadID: String, $newComment: String) {
+      CreateComment(threadID: $threadID, newComment: $newComment)
+    }
+  `;
+  /* const [loadThreads, { loading, error, data, refetch }] = useLazyQuery(
+    GET_THREAD,
+    {
       variables: { categoryIndex: categoryIndex },
-    });
-    if (loading) return console.log("LOADING");
-    if (error) return <p>Error : {error.message}</p>;
-  }, []);
+      onCompleted: (data) => {
+        console.log("Threads: ", data);
+        setPosts(data?.threads);
+      },
+      onError: () => {
+        toast.error("Cannot Connect to Server!", {
+          position: "bottom-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      },
+      fetchPolicy: "network-only",
+    }
+  ); */
 
-  useEffect(() => {
+  /*   useEffect(() => {
     console.log("Fetch Channel");
     console.log(categoryIndex);
     loadThreads({
@@ -277,12 +344,7 @@ function App() {
     });
     if (loading) return console.log("LOADING");
     if (error) return <p>Error : {error.message}</p>;
-  }, [categoryIndex]);
-
-  useEffect(() => {
-    console.log("Threads: ", data);
-    setPosts(data?.threads);
-  }, [data]);
+  }, [categoryIndex]); */
 
   const handleRefresh = () => {
     console.log("REFRESH");
@@ -291,23 +353,21 @@ function App() {
 
   //https://www.apollographql.com/docs/apollo-server/getting-started#step-4-define-your-data-set
   //https://www.apollographql.com/docs/react/get-started
-  /* function DisplayThread() {
-    const { loading, error, data } = useQuery(GET_THREAD, {
-      variables: { categoryIndex: categoryIndex },
-    });
-
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error : {error.message}</p>;
-
-    console.log("Threads: ", data);
-    setPosts(data.threads);
-  } */
+  const { loading, error, data, refetch } = useQuery(GET_ALL_THREAD, {
+    variables: { categoryIndex: categoryIndex },
+    fetchPolicy: "network-only", // Used for first execution
+    nextFetchPolicy: "cache-first", // Used for subsequent executions
+    onCompleted: (data) => {
+      console.log("Threads: ", data);
+      setPosts(data?.threads);
+    },
+  });
 
   const [newTitle, setNewTitle] = useState();
   const [newContent, setNewContent] = useState();
   const [CreateThreadMutation] = useMutation(CREATE_THREAD);
   function CreateThread(categoryId) {
-    console.log("CREATEING THREAD...");
+    console.log("CREATING THREAD...");
     console.log("TITLE: ", newTitle);
     console.log("CONTENT: ", newContent);
     console.log("Category: ", typeof parseInt(categoryId));
@@ -321,6 +381,43 @@ function App() {
       .then((data) => {
         console.log(data);
         toggleNewPostDrawerClose();
+      })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  const [newComment, setNewComment] = useState();
+  const [CreateCommentMutation] = useMutation(CREATE_COMMENT);
+  const {
+    loading: tloading,
+    error: terror,
+    data: tdata,
+    refetch: threadRefetch,
+  } = useQuery(FETCH_THREAD, {
+    variables: { threadID: threadID },
+    onCompleted: (data) => {
+      console.log("HI", data);
+      setComments(data?.thread.comments);
+    },
+  });
+  function CreateComment() {
+    console.log("CREATING COMMENT...");
+    console.log(threadID);
+    console.log(newComment);
+    CreateCommentMutation({
+      variables: {
+        threadID: threadID,
+        newComment: newComment,
+      },
+      onCompleted: (data) => {
+        threadRefetch();
+      },
+    })
+      .then((data) => {
+        console.log(data);
+
+        toggleReplyDrawerClose();
       })
       .catch((err) => {
         throw err;
@@ -352,6 +449,7 @@ function App() {
   }
 
   const ClickThread = (index) => {
+    setThreadID(posts[index]._id);
     setThreadTitle(posts[index].title);
     setContent(posts[index].content);
     setComments(posts[index].comments);
@@ -386,7 +484,7 @@ function App() {
       >
         <AnimatePresence>
           <Routes>
-            <Route exact path="/" element={<Index />} />
+            <Route path="/" element={<Index />} />
             <Route
               exact
               path="/category/:id"
@@ -412,6 +510,7 @@ function App() {
                   content={content}
                   author={author}
                   comments={comments}
+                  toggleReplyDrawerOpen={toggleReplyDrawerOpen}
                 />
               }
             ></Route>
@@ -419,7 +518,6 @@ function App() {
         </AnimatePresence>
         {/*  <button onClick={handleLoginOpen}>print</button> */}
         {/* <DisplayThread /> */}
-
         <Drawer
           list={list}
           toggleDrawer={toggleDrawer}
@@ -430,6 +528,19 @@ function App() {
           handleLoginClose={handleLoginClose}
           loginCheck={loginCheck}
         />
+        <ToastContainer
+          position="bottom-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+        ;
       </Container>
     </ThemeProvider>
   );

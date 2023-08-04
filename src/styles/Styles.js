@@ -43,6 +43,10 @@ const theme = createTheme({
     lightgray: {
       main: Colors.dove_gray,
     },
+    action: {
+      disabledBackground: "",
+      disabled: "#FFF",
+    },
   },
   components: {
     MuiTypography: {
