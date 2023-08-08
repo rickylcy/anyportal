@@ -34,6 +34,7 @@ import AlertDrawer from "./components/DrawerContent/AlertDrawer";
 import SettingDrawer from "./components/DrawerContent/SettingDrawer";
 import NewPostDrawer from "./components/DrawerContent/NewPostDrawer";
 import ReplyDrawer from "./components/DrawerContent/ReplyDrawer";
+import SignupDrawer from "./components/DrawerContent/SignupDrawer";
 
 function App() {
   // FIXED STATE
@@ -62,6 +63,7 @@ function App() {
   });
   const [newPostDrawerOpen, setNewPostDrawerOpen] = useState(false);
   const [replyDrawerOpen, setReplyDrawerOpen] = useState(false);
+  const [signupDrawerOpen, setSignupDrawerOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [logon, setLogon] = useState(false);
 
@@ -107,6 +109,8 @@ function App() {
             setNewComment={setNewComment}
           />
         );
+      } else if (signupDrawerOpen === true) {
+        return <SignupDrawer toggleDrawer={toggleDrawer} />;
       }
       return <NotificationDrawer toggleDrawer={toggleDrawer} />;
     } else if (anchor === "top") {
@@ -161,6 +165,25 @@ function App() {
 
   const toggleReplyDrawerClose = (event) => {
     setReplyDrawerOpen(false);
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["right"]: false,
+    }));
+  };
+
+  //SIGNUP DRAWER
+  const toggleSignupDrawerOpen = (event) => {
+    setLoginOpen(false);
+    setSignupDrawerOpen(true);
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["right"]: true,
+    }));
+  };
+
+  const toggleSignupDrawerClose = (event) => {
+    console.log("asf");
+    setSignupDrawerOpen(false);
     setDrawerState((drawerState) => ({
       ...drawerState,
       ["right"]: false,
@@ -381,6 +404,17 @@ function App() {
       .then((data) => {
         console.log(data);
         toggleNewPostDrawerClose();
+        toast.success("帖文已發送!", {
+          position: "bottom-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        refetch();
       })
       .catch((err) => {
         throw err;
@@ -403,8 +437,6 @@ function App() {
   });
   function CreateComment() {
     console.log("CREATING COMMENT...");
-    console.log(threadID);
-    console.log(newComment);
     CreateCommentMutation({
       variables: {
         threadID: threadID,
@@ -412,6 +444,17 @@ function App() {
       },
       onCompleted: (data) => {
         threadRefetch();
+        toast.success("回覆已發送!", {
+          position: "bottom-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+        refetch();
       },
     })
       .then((data) => {
@@ -514,10 +557,14 @@ function App() {
                 />
               }
             ></Route>
+            <Route
+              exact
+              path="/register"
+              element={<SignupDrawer toggleDrawer={toggleDrawer} />}
+            ></Route>
           </Routes>
         </AnimatePresence>
         {/*  <button onClick={handleLoginOpen}>print</button> */}
-        {/* <DisplayThread /> */}
         <Drawer
           list={list}
           toggleDrawer={toggleDrawer}
@@ -527,6 +574,7 @@ function App() {
           loginOpen={loginOpen}
           handleLoginClose={handleLoginClose}
           loginCheck={loginCheck}
+          toggleSignupDrawerOpen={toggleSignupDrawerOpen}
         />
         <ToastContainer
           position="bottom-center"
@@ -535,12 +583,11 @@ function App() {
           newestOnTop={false}
           closeOnClick
           rtl={false}
-          pauseOnFocusLoss
+          pauseOnFocusLoss={false}
           draggable
           pauseOnHover
           theme="dark"
         />
-        ;
       </Container>
     </ThemeProvider>
   );

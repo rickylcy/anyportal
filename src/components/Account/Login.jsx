@@ -7,8 +7,18 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
+import { Link } from "react-router-dom";
 
-export default function Login({ loginOpen, handleLoginClose, loginCheck }) {
+export default function Login({
+  loginOpen,
+  handleLoginClose,
+  loginCheck,
+  toggleSignupDrawerOpen,
+}) {
+  const linkStyle = {
+    textDecoration: "none",
+    color: "black",
+  };
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   return (
@@ -52,7 +62,9 @@ export default function Login({ loginOpen, handleLoginClose, loginCheck }) {
         <DialogActions>
           <Grid container>
             <Grid item xs={6} align="center">
-              <Button onClick={handleLoginClose}>會員註冊</Button>
+              <Link to="/register" style={linkStyle}>
+                <Button onClick={toggleSignupDrawerOpen}>會員註冊</Button>
+              </Link>
             </Grid>
             <Grid item xs={6} align="center">
               <Button onClick={() => loginCheck(username, password)}>

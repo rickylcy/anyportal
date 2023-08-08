@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 function TopAppBar({ categoryIndex, threadTitle }) {
   return (
     <AppBar
-      position="static"
+      position="sticky"
       sx={{
         bgcolor: "darkgray.main",
         top: 0,

@@ -63,8 +63,10 @@ function Thread({
           bgcolor: "lightgray.main",
           color: "black",
           width: "100vw",
-          height: "100vh",
+          height: "94vh",
           padding: 0,
+          overflow: "hidden",
+          overflowY: "scroll",
         }}
         onTouchStart={(e) => onTouchStart(e)}
         onTouchMove={(e) => onTouchMove(e)}
@@ -75,8 +77,7 @@ function Thread({
           <PageAppBar />
           <Content author={author} content={content} />
           {comments.map((comment, index) => {
-            console.log("comment", comment);
-            return <Comment index={index} comment={comment} />;
+            return <Comment index={index} key={index} comment={comment} />;
           })}
           <ButtomAppBar toggleReplyDrawerOpen={toggleReplyDrawerOpen} />
         </Box>
