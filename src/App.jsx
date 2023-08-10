@@ -110,7 +110,9 @@ function App() {
           />
         );
       } else if (signupDrawerOpen === true) {
-        return <SignupDrawer toggleDrawer={toggleDrawer} />;
+        return (
+          <SignupDrawer toggleDrawer={toggleDrawer} CreateUser={CreateUser} />
+        );
       }
       return <NotificationDrawer toggleDrawer={toggleDrawer} />;
     } else if (anchor === "top") {
@@ -335,39 +337,12 @@ function App() {
       CreateComment(threadID: $threadID, newComment: $newComment)
     }
   `;
-  /* const [loadThreads, { loading, error, data, refetch }] = useLazyQuery(
-    GET_THREAD,
-    {
-      variables: { categoryIndex: categoryIndex },
-      onCompleted: (data) => {
-        console.log("Threads: ", data);
-        setPosts(data?.threads);
-      },
-      onError: () => {
-        toast.error("Cannot Connect to Server!", {
-          position: "bottom-center",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-        });
-      },
-      fetchPolicy: "network-only",
-    }
-  ); */
 
-  /*   useEffect(() => {
-    console.log("Fetch Channel");
-    console.log(categoryIndex);
-    loadThreads({
-      variables: { categoryIndex: categoryIndex },
-    });
-    if (loading) return console.log("LOADING");
-    if (error) return <p>Error : {error.message}</p>;
-  }, [categoryIndex]); */
+  const CREATE_USER = gql`
+    mutation CreateUser($username: String, $password: String) {
+      CreateUser(username: $username, password: $password)
+    }
+  `;
 
   const handleRefresh = () => {
     console.log("REFRESH");
@@ -462,6 +437,34 @@ function App() {
 
         toggleReplyDrawerClose();
       })
+      .catch((err) => {
+        throw err;
+      });
+  }
+
+  const [CreateUserMutation] = useMutation(CREATE_USER);
+  function CreateUser(uname, pword) {
+    console.log("CREATING COMMENT...");
+    CreateUserMutation({
+      variables: {
+        username: uname,
+        password: pword,
+      },
+      onCompleted: (data) => {
+        toggleSignupDrawerClose();
+        toast.success("帳號註冊成功!", {
+          position: "bottom-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      },
+    })
+      .then((data) => {})
       .catch((err) => {
         throw err;
       });
