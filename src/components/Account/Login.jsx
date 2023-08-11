@@ -8,12 +8,15 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import { Link } from "react-router-dom";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
 export default function Login({
   loginOpen,
   handleLoginClose,
   loginCheck,
   toggleSignupDrawerOpen,
+  loginErrorMessage,
 }) {
   const linkStyle = {
     textDecoration: "none",
@@ -58,6 +61,17 @@ export default function Login({
               setPassword(e.target.value);
             }}
           />
+          <Grid item xs={10} align="center">
+            <Box sx={{ height: "3vh", paddingTop: 2 }}>
+              <Typography
+                variant="subtitle1"
+                color="red.main"
+                sx={{ fontWeight: "bold" }}
+              >
+                {loginErrorMessage}
+              </Typography>
+            </Box>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Grid container>

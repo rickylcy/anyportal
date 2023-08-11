@@ -68,7 +68,8 @@ function App() {
   const [logon, setLogon] = useState(false);
 
   const [alertMessage, setAlertMessage] = useState("");
-
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState("");
+  const [loginErrorMessage, setLoginErrorMessage] = useState("");
   //
   const [channelName, setChannelName] = useState("吹水台");
   const [topOptions, setTopOptions] = useState(["Populars"]);
@@ -111,7 +112,12 @@ function App() {
         );
       } else if (signupDrawerOpen === true) {
         return (
-          <SignupDrawer toggleDrawer={toggleDrawer} CreateUser={CreateUser} />
+          <SignupDrawer
+            toggleDrawer={toggleDrawer}
+            CreateUser={CreateUser}
+            signUpErrorMessage={signUpErrorMessage}
+            setSignUpErrorMessage={setSignUpErrorMessage}
+          />
         );
       }
       return <NotificationDrawer toggleDrawer={toggleDrawer} />;
@@ -184,12 +190,12 @@ function App() {
   };
 
   const toggleSignupDrawerClose = (event) => {
-    console.log("asf");
     setSignupDrawerOpen(false);
     setDrawerState((drawerState) => ({
       ...drawerState,
       ["right"]: false,
     }));
+    setSignUpErrorMessage("");
   };
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -249,6 +255,7 @@ function App() {
 
   const handleLoginClose = () => {
     setLoginOpen(false);
+    setLoginErrorMessage("");
   };
 
   const loginCheck = (username, password) => {
@@ -271,6 +278,7 @@ function App() {
         1000
       );
     }
+    LoginUser(username, password);
     if (username === "admin" && password === "admin") {
       console.log("OK");
       setLoginOpen(false);
@@ -341,6 +349,16 @@ function App() {
   const CREATE_USER = gql`
     mutation CreateUser($username: String, $password: String) {
       CreateUser(username: $username, password: $password)
+    }
+  `;
+
+  const LOGIN_USER = gql`
+    mutation LoginUser($username: String, $password: String) {
+      LoginUser(username: $username, password: $password) {
+        _id
+        username
+        token
+      }
     }
   `;
 
@@ -463,11 +481,71 @@ function App() {
           theme: "dark",
         });
       },
-    })
-      .then((data) => {})
-      .catch((err) => {
-        throw err;
+      onError: (error) => {
+        console.log("用戶名已存在!");
+        setSignUpErrorMessage("用戶名已存在!");
+        toast.error("用戶名已存在!", {
+          position: "bottom-center",
+          autoClose: 1500,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+        });
+      },
+    });
+  }
+
+  const [LoginUserMutation] = useMutation(LOGIN_USER);
+
+  function LoginUser(uname, pword) {
+    try {
+      console.log("Inside Login...");
+      LoginUserMutation({
+        variables: {
+          username: uname,
+          password: pword,
+        },
+        onCompleted: (data) => {
+          console.log(data);
+          handleLoginClose();
+          toast.success("登入成功!", {
+            position: "bottom-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        },
+        onError: (error) => {
+          console.log(error.message.split(": ")[1]);
+          setLoginErrorMessage(error.message.split(": ")[1]);
+          toast.error(error.message.split(": ")[1], {
+            position: "bottom-center",
+            autoClose: 1500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+          });
+        },
       });
+      /* const { data } = await LoginUserMutation({
+        variables: { username: uname, password: pword },
+      });
+      const user = data.loginUser;
+      console.log("Logged in user:", user); */
+      // Store the JWT token in localStorage or a state management solution
+    } catch (error) {
+      console.error("Error logging in:", error.message);
+    }
   }
 
   function FetchUser() {
@@ -578,6 +656,7 @@ function App() {
           handleLoginClose={handleLoginClose}
           loginCheck={loginCheck}
           toggleSignupDrawerOpen={toggleSignupDrawerOpen}
+          loginErrorMessage={loginErrorMessage}
         />
         <ToastContainer
           position="bottom-center"

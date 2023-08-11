@@ -7,8 +7,14 @@ import CloseIcon from "@mui/icons-material/Close";
 import { Link } from "react-router-dom";
 import TextField from "@mui/material/TextField";
 import AbcIcon from "@mui/icons-material/Abc";
+import { toast } from "react-toastify";
 
-function SignupDrawer({ toggleDrawer, CreateUser }) {
+function SignupDrawer({
+  toggleDrawer,
+  CreateUser,
+  signUpErrorMessage,
+  setSignUpErrorMessage,
+}) {
   const linkStyle = {
     textDecoration: "none",
     color: "black",
@@ -23,6 +29,18 @@ function SignupDrawer({ toggleDrawer, CreateUser }) {
     console.log("repassword ", repassword);
     if (password !== repassword) {
       console.log("password not match!");
+      setSignUpErrorMessage("Password does not match!");
+      toast.error("Password does not match!", {
+        position: "bottom-center",
+        autoClose: 1500,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+      });
+      return;
     }
     CreateUser(username, password);
   };
@@ -113,13 +131,26 @@ function SignupDrawer({ toggleDrawer, CreateUser }) {
           />
         </Grid>
         <Grid item xs={10} align="center">
-          <Button
-            variant="contained"
-            fullWidth
-            onClick={() => CheckCredential()}
-          >
-            註冊
-          </Button>
+          <Box sx={{ height: "3vh" }}>
+            <Typography
+              variant="subtitle1"
+              color="red.main"
+              sx={{ fontWeight: "bold" }}
+            >
+              {signUpErrorMessage}
+            </Typography>
+          </Box>
+        </Grid>
+        <Grid item xs={10} align="center">
+          <Link to="/category/0" style={linkStyle}>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={() => CheckCredential()}
+            >
+              註冊
+            </Button>
+          </Link>
         </Grid>
       </Grid>
     </Box>

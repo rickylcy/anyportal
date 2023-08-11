@@ -6,7 +6,7 @@ const Colors = {
   success: "#4CAF50",
   info: "#00a2ff",
   danger: "#FF5722",
-  warning: "#FFC107",
+  warning: "#ff0f0f",
   dark: "#0e1b20",
   light: "#aaa",
   muted: "#abafb3",
@@ -42,6 +42,9 @@ const theme = createTheme({
     },
     lightgray: {
       main: Colors.dove_gray,
+    },
+    red: {
+      main: Colors.warning,
     },
     action: {
       disabledBackground: "",
