@@ -4,9 +4,10 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Box from "@mui/material/Box";
 import NavBar from "../../components/NavBar";
-
+import Chip from "@mui/material/Chip";
+import ForumIcon from "@mui/icons-material/Forum";
 import TopNavBar from "../../components/TopNavBar";
-import { NoEncryption } from "@mui/icons-material";
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 function Posts({
   posts,
   topOptions,
@@ -15,6 +16,7 @@ function Posts({
   toggleDrawer,
   toggleNewPostDrawerOpen,
   handleRefresh,
+  channels,
 }) {
   const linkStyle = {
     textDecoration: "none",
@@ -42,6 +44,7 @@ function Posts({
       >
         <List>
           {posts?.map((post, index) => {
+            console.log("post", post);
             var link = "/thread/" + post.thread;
             return (
               <Link key={index} to={link} style={linkStyle}>
@@ -52,9 +55,33 @@ function Posts({
                   }}
                 >
                   <Grid container>
-                    <Grid item xs={12}>
+                    <Grid item xs={5}>
                       <Typography variant="subtitle2">{post.author}</Typography>
                     </Grid>
+                    <Grid item xs={2.5} align="center">
+                      <Chip
+                        icon={<ForumIcon />}
+                        label={post.comments.length}
+                        size="small"
+                        sx={{ fontSize: "0.7rem", bgcolor: "transparent" }}
+                      />
+                    </Grid>
+                    <Grid item xs={2.5} align="center">
+                      <Chip
+                        icon={<ThumbUpIcon />}
+                        label={post.thumbup - post.thumbdown}
+                        size="small"
+                        sx={{ fontSize: "0.7rem", bgcolor: "transparent" }}
+                      />
+                    </Grid>
+                    <Grid item xs={2} align="right">
+                      <Chip
+                        label={channels[post.category]}
+                        size="small"
+                        sx={{ fontSize: "0.7rem" }}
+                      />
+                    </Grid>
+
                     <Grid item xs={12}>
                       <Typography variant="subtitle1">{post.title}</Typography>
                     </Grid>

@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import { Button, Grid } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 
-function NotificationDrawer({ handleNotificationClose }) {
+function AccountDrawer({ handleAccountClose }) {
   return (
     <Box sx={{ width: "100vw", flexGrow: 1 }} role="presentation">
       <AppBar
@@ -18,24 +18,19 @@ function NotificationDrawer({ handleNotificationClose }) {
         }}
       >
         <Grid container>
-          <Grid
-            item
-            xs={1}
-            align="center"
-            onClick={() => handleNotificationClose()}
-          >
+          <Grid item xs={1} align="center" onClick={() => handleAccountClose()}>
             <CloseIcon color="white" sx={{ fontSize: 30, m: 0.5 }} />
           </Grid>
           <Grid item xs={10} align="center">
             <Typography variant="h6" color="secondary" sx={{ pt: 0.5 }}>
-              Notifications
+              Account
             </Typography>
           </Grid>
         </Grid>
       </AppBar>
-      NOTIFICATION
+      ACCOUNT DETAILS
     </Box>
   );
 }
 
-export default NotificationDrawer;
+export default AccountDrawer;

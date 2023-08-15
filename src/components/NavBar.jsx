@@ -12,7 +12,7 @@ import AutorenewIcon from "@mui/icons-material/Autorenew";
 function NavBar({ toggleDrawer, toggleNewPostDrawerOpen, handleRefresh }) {
   return (
     <AppBar
-      position="fixed"
+      position="sticky"
       sx={{
         bgcolor: "darkgray.main",
         top: "auto",

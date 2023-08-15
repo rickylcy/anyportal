@@ -18,6 +18,7 @@ import {
 } from "@apollo/client";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import jwt_decode from "jwt-decode";
 
 import CssBaseline from "@mui/material/CssBaseline";
 import { ThemeProvider } from "@mui/material/styles";
@@ -35,6 +36,8 @@ import SettingDrawer from "./components/DrawerContent/SettingDrawer";
 import NewPostDrawer from "./components/DrawerContent/NewPostDrawer";
 import ReplyDrawer from "./components/DrawerContent/ReplyDrawer";
 import SignupDrawer from "./components/DrawerContent/SignupDrawer";
+import AccountDrawer from "./components/DrawerContent/AccountDrawer";
+import AdSense from "./components/AdSense";
 
 function App() {
   // FIXED STATE
@@ -64,6 +67,8 @@ function App() {
   const [newPostDrawerOpen, setNewPostDrawerOpen] = useState(false);
   const [replyDrawerOpen, setReplyDrawerOpen] = useState(false);
   const [signupDrawerOpen, setSignupDrawerOpen] = useState(false);
+  const [accountDrawerOpen, setAccountDrawerOpen] = useState(false);
+  const [notificationDrawerOpen, setNotificationDrawerOpen] = useState(false);
   const [loginOpen, setLoginOpen] = useState(false);
   const [logon, setLogon] = useState(false);
 
@@ -119,8 +124,15 @@ function App() {
             setSignUpErrorMessage={setSignUpErrorMessage}
           />
         );
+      } else if (accountDrawerOpen === true) {
+        return <AccountDrawer handleAccountClose={handleAccountClose} />;
+      } else if (notificationDrawerOpen === true) {
+        return (
+          <NotificationDrawer
+            handleNotificationClose={handleNotificationClose}
+          />
+        );
       }
-      return <NotificationDrawer toggleDrawer={toggleDrawer} />;
     } else if (anchor === "top") {
       return (
         <AlertDrawer toggleDrawer={toggleDrawer} alertMessage={alertMessage} />
@@ -144,13 +156,33 @@ function App() {
 
   //NEW POST DRAWER
   const toggleNewPostDrawerOpen = (event) => {
-    setNewPostDrawerOpen(true);
-    console.log("11");
-    setDrawerState((drawerState) => ({
-      ...drawerState,
-      ["left"]: false,
-      ["bottom"]: true,
-    }));
+    console.log(isAuthenticated());
+
+    if (isAuthenticated()) {
+      setNewPostDrawerOpen(true);
+      console.log("11");
+      setDrawerState((drawerState) => ({
+        ...drawerState,
+        ["left"]: false,
+        ["bottom"]: true,
+      }));
+    } else {
+      setAlertMessage("請先登入!");
+      setDrawerState((drawerState) => ({
+        ...drawerState,
+        ["left"]: false,
+        ["top"]: true,
+      }));
+      setLoginOpen(true);
+      setTimeout(
+        () =>
+          setDrawerState((drawerState) => ({
+            ...drawerState,
+            ["top"]: false,
+          })),
+        1000
+      );
+    }
   };
 
   const toggleNewPostDrawerClose = (event) => {
@@ -211,11 +243,19 @@ function App() {
   };
 
   const handleNotificationOpen = (event) => {
+    setNotificationDrawerOpen(true);
     setDrawerState((drawerState) => ({
       ...drawerState,
       ["left"]: false,
       ["right"]: true,
     }));
+  };
+  const handleNotificationClose = (event) => {
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["right"]: false,
+    }));
+    setNotificationDrawerOpen(false);
   };
 
   const handleSettingOpen = (event) => {
@@ -227,7 +267,7 @@ function App() {
   };
 
   const handleLoginOpen = () => {
-    if (logon === false) {
+    /* if (logon === false) {
       setAlertMessage("請先登入!");
       setDrawerState((drawerState) => ({
         ...drawerState,
@@ -250,12 +290,46 @@ function App() {
         ["left"]: false,
         ["right"]: true,
       }));
+    } */
+    console.log(isAuthenticated());
+
+    if (isAuthenticated()) {
+      setAccountDrawerOpen(true);
+      setDrawerState((drawerState) => ({
+        ...drawerState,
+        ["left"]: false,
+        ["right"]: true,
+      }));
+    } else {
+      setAlertMessage("請先登入!");
+      setDrawerState((drawerState) => ({
+        ...drawerState,
+        ["left"]: false,
+        ["top"]: true,
+      }));
+      setLoginOpen(true);
+      setTimeout(
+        () =>
+          setDrawerState((drawerState) => ({
+            ...drawerState,
+            ["top"]: false,
+          })),
+        1000
+      );
     }
   };
 
   const handleLoginClose = () => {
     setLoginOpen(false);
     setLoginErrorMessage("");
+  };
+
+  const handleAccountClose = () => {
+    setAccountDrawerOpen(false);
+    setDrawerState((drawerState) => ({
+      ...drawerState,
+      ["right"]: false,
+    }));
   };
 
   const loginCheck = (username, password) => {
@@ -288,14 +362,20 @@ function App() {
 
   const GET_ALL_THREAD = gql`
     query threads($categoryIndex: Int) {
-      threads(category: $categoryIndex) {
+      threads(categoryIndex: $categoryIndex) {
         _id
         title
         author
         content
+        category
+        thumbup
+        thumbdown
         comments {
           content
-          author
+          author {
+            userid
+            username
+          }
         }
       }
     }
@@ -308,9 +388,14 @@ function App() {
         title
         author
         content
+        thumbup
+        thumbdown
         comments {
           content
-          author
+          author {
+            userid
+            username
+          }
         }
       }
     }
@@ -335,14 +420,24 @@ function App() {
       $title: String
       $content: String
       $categoryIndex: Int
+      $_id: String
     ) {
-      CreateThread(title: $title, content: $content, category: $categoryIndex)
+      CreateThread(
+        title: $title
+        content: $content
+        category: $categoryIndex
+        _id: $_id
+      )
     }
   `;
 
   const CREATE_COMMENT = gql`
-    mutation CreateComment($threadID: String, $newComment: String) {
-      CreateComment(threadID: $threadID, newComment: $newComment)
+    mutation CreateComment(
+      $threadID: String
+      $newComment: String
+      $_id: String
+    ) {
+      CreateComment(threadID: $threadID, newComment: $newComment, _id: $_id)
     }
   `;
 
@@ -387,11 +482,13 @@ function App() {
     console.log("TITLE: ", newTitle);
     console.log("CONTENT: ", newContent);
     console.log("Category: ", typeof parseInt(categoryId));
+    console.log("id", localStorage.getItem("_id"));
     CreateThreadMutation({
       variables: {
         title: newTitle,
         content: newContent,
         categoryIndex: parseInt(categoryId),
+        _id: localStorage.getItem("_id"),
       },
     })
       .then((data) => {
@@ -434,6 +531,7 @@ function App() {
       variables: {
         threadID: threadID,
         newComment: newComment,
+        _id: localStorage.getItem("_id"),
       },
       onCompleted: (data) => {
         threadRefetch();
@@ -452,7 +550,6 @@ function App() {
     })
       .then((data) => {
         console.log(data);
-
         toggleReplyDrawerClose();
       })
       .catch((err) => {
@@ -510,6 +607,8 @@ function App() {
         },
         onCompleted: (data) => {
           console.log(data);
+          localStorage.setItem("token", data.LoginUser.token);
+          localStorage.setItem("_id", data.LoginUser._id);
           handleLoginClose();
           toast.success("登入成功!", {
             position: "bottom-center",
@@ -581,6 +680,36 @@ function App() {
     setThread(posts[index]);
   };
 
+  const isAuthenticated = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // Decode the token to get the expiration time
+      const decodedToken = jwt_decode(token);
+      const expirationTime = decodedToken.exp;
+
+      // Get the current time as a UNIX timestamp
+      const currentTime = Math.floor(Date.now() / 1000);
+
+      if (expirationTime < currentTime) {
+        // Token has expired, take appropriate action (e.g., prompt for re-login)
+        console.log("Token has expired");
+        // Remove the token from storage and handle re-login
+        localStorage.removeItem("token");
+        return false;
+      } else {
+        // Token is still valid, proceed with using it
+        console.log("Token is valid");
+        // Continue using the token for your API requests
+        return true;
+      }
+    } else {
+      // Token is not present, handle accordingly (e.g., prompt for login)
+      console.log("No token found");
+      // Handle user authentication
+      return false;
+    }
+  };
+
   function Index() {
     const navigate = useNavigate();
     useEffect(() => {
@@ -621,6 +750,7 @@ function App() {
                   toggleDrawer={toggleDrawer}
                   toggleNewPostDrawerOpen={toggleNewPostDrawerOpen}
                   handleRefresh={handleRefresh}
+                  channels={channels}
                 />
               }
             ></Route>
@@ -658,6 +788,7 @@ function App() {
           toggleSignupDrawerOpen={toggleSignupDrawerOpen}
           loginErrorMessage={loginErrorMessage}
         />
+        <AdSense />
         <ToastContainer
           position="bottom-center"
           autoClose={3000}

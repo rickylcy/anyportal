@@ -23,7 +23,9 @@ function Comment({ index, comment }) {
             <Typography variant="subtitle2"> #{index + 1}</Typography>
           </Grid>
           <Grid item xs={5}>
-            <Typography variant="subtitle2">{comment?.author}</Typography>
+            <Typography variant="subtitle2">
+              {comment?.author.username}
+            </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="subtitle1">{comment?.content}</Typography>
