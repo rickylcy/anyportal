@@ -27,7 +27,7 @@ import Container from "@mui/material/Container";
 import Drawer from "./components/Menu/Drawer";
 import Posts from "./pages/Posts/Posts";
 import Thread from "./pages/Posts/Thread";
-import Login from "./components/Account/login";
+import Login from "./components/Account/Login";
 
 import MenuDrawer from "./components/DrawerContent/MenuDrawer";
 import NotificationDrawer from "./components/DrawerContent/NotificationDrawer";
