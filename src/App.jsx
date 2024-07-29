@@ -37,7 +37,6 @@ import NewPostDrawer from "./components/DrawerContent/NewPostDrawer";
 import ReplyDrawer from "./components/DrawerContent/ReplyDrawer";
 import SignupDrawer from "./components/DrawerContent/SignupDrawer";
 import AccountDrawer from "./components/DrawerContent/AccountDrawer";
-import AdSense from "./components/AdSense";
 
 function App() {
   // FIXED STATE
@@ -788,7 +787,6 @@ function App() {
           toggleSignupDrawerOpen={toggleSignupDrawerOpen}
           loginErrorMessage={loginErrorMessage}
         />
-        <AdSense />
         <ToastContainer
           position="bottom-center"
           autoClose={3000}
